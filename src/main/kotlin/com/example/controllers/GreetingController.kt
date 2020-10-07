@@ -12,9 +12,9 @@ class GreetingController {
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  fun greeting(@Valid criteria: RequestCriteria?): Greeting {
-    val hour: Int = criteria?.hour!!
-    return if (hour < 5) {
+  fun greeting(@Valid criteria: RequestCriteria): Greeting {
+    val hour: Int = criteria.hour ?: -1
+    return if (hour in 0..4) {
       Greeting("good night")
     } else if (hour in 5..15) {
       Greeting("good morning")
@@ -28,13 +28,12 @@ class GreetingController {
   @ExceptionHandler(BindException::class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   fun handleBindingException(e: BindException): ApiError {
-    var apiErrorDetails: List<ApiError> = e.bindingResult.fieldErrors.map {
+    val apiErrorDetails: List<ApiError> = e.bindingResult.fieldErrors.map {
       ApiError(
         it.defaultMessage,
         it.field
       )
     }
-    val apiError = ApiError("request is invalid", "", apiErrorDetails)
-    return apiError
+    return ApiError("request is invalid", "", apiErrorDetails)
   }
 }
