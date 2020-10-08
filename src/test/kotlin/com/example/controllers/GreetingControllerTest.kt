@@ -21,13 +21,15 @@ class GreetingControllerTest {
   @Autowired
   private lateinit var mockMvc: MockMvc
 
-  @Rule @JvmField
+  @Rule
+  @JvmField
   val restDocumentation = JUnitRestDocumentation("build/generated-snippets")
 
   @Before
   fun setUp() {
     mockMvc = MockMvcBuilders.standaloneSetup(GreetingController())
-      .apply<StandaloneMockMvcBuilder>(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
+      .apply<StandaloneMockMvcBuilder>(
+        MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
       .alwaysDo<StandaloneMockMvcBuilder>(
         MockMvcRestDocumentation.document(
           "greeting/{method-name}",
